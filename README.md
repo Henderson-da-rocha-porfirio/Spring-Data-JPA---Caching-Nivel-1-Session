@@ -1,4 +1,4 @@
-# Caching ou Cache
+# Caching ou Cache (memória transitória)
 ## A. O que é caching?
 ## Precisamos entender antes de responder a pergunta:
 ### 1. Conceito de Cache em Computação: é um dispositivo de acesso rápido, interno a um sistema, que serve de intermediário entre um operador de um processo e o dispositivo de armazenamento ao qual esse operador acede (wikipedia)
