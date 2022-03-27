@@ -2,6 +2,7 @@ package com.tuyo.produtodata.produtosdata;
 
 import com.tuyo.produtodata.produtosdata.entities.*;
 import com.tuyo.produtodata.produtosdata.repository.*;
+import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.junit.jupiter.api.*;
 import org.junit.runner.*;
@@ -11,6 +12,7 @@ import org.springframework.data.domain.*;
 import org.springframework.test.context.junit4.*;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -22,8 +24,11 @@ class ProdutosdataApplicationTests {    // Junit testes
     @Autowired
     ProdutoRepository repository;
 
-    @Test
-        // Construtor marcado com a annotation Test.
+    @Autowired
+    EntityManager entityManager;        // Esse é o equivalente, da Session do Hibernate, do JPA.
+
+
+    @Test                                  // Construtor marcado com a annotation Test.
     void contextLoads() {                // Esse teste ele vai correr e procurar por uma classe que tiver marcada, no classpath, com a @SprinBootApplication.
     }
 
@@ -42,7 +47,7 @@ class ProdutosdataApplicationTests {    // Junit testes
     public void testRead() {
         Produto produto = repository.findById(1).get();
         assertNotNull(produto);
-        assertEquals("Iphone", produto.getName());
+        assertEquals("Smartphone", produto.getName());
         System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" + produto.getDesc());
     }
 
@@ -126,7 +131,7 @@ class ProdutosdataApplicationTests {    // Junit testes
         produtos.forEach(p -> System.out.println(p.getName()));
     }
 
-    @Test
+    /*@Test
     public void testFindAllPaging() {                               // Criando Paging
         // FindAll methods só apareceram apra serem utilizado depois de ser implementado em ProdutoRepository: PagingAndSortingRepository
         Pageable pageable = PageRequest.of(0, 1);         // Usando Pageable de Spring Data e não do java.awt. Pageable é uma Interface e por isso não é possível criar uma instância (instanceOf)
@@ -167,27 +172,27 @@ class ProdutosdataApplicationTests {    // Junit testes
         Pageable pageable = PageRequest.of(0, 2, Sort.Direction.DESC, "name");
         repository.findAll(pageable).forEach(p -> System.out.println(p.getName()));
 
+    }*/
+                                        // Nível 1 - Cache - Session - Armazenando em Cache
+    /*@Test                             // Teste nível 1 - session é public por default
+    @Transactional                      //@Transactional = Porque o Spring trata o nível de Caching - Session ou o Spring Session está associado com transaction e para funcionar, é necessário anotar. É obrigatório para funcionar o Nível 1 - Session.
+    public void testCaching() {         // Select, como mostrado no console, é executado uma vez, embora estejamos lendo o Produto algumas vezes, será lido usando o Select Query do database.
+        repository.findById(1);         // O primeiro findById é lido do Database, por uma instrução Select. Nesse ponto armazenará no nível Session do Hibernate que é o nível 1 de Cache.
+        repository.findById(1);         // O segundo findById é lido do Cache.
+                                        // Se removermos @Transactional, e rodarmos o teste, veremos que o nível 1 - Session do Hibernate não funcionará. Ele estará buscando diretamente do database.
+    }*/
+
+    @Test
+    @Transactional                                              // Teste nível 1 - usando " evict " ( desalojar = remover do armazenamento de Cache )
+    public void testCaching() {                                 // É necessário usar EntityManager. Esse é o equivalente, da Session do Hibernate, do JPA.
+        Session session = entityManager.unwrap(Session.class);  // Para acessar a Session do Hibernate. "unwrap"(desempacota). Session é o objeto que queremos "desempacotar"(unwrap) do heap.
+        Produto produto = repository.findById(1).get();         //  Corre (RUN) a primeira Query (consulta). * Observar: Variável Local (Objeto existente) = Produto.
+
+        repository.findById(1).get();                           // Aqui ele não rodará (RUN) a Query porque o objeto ainda estará em Cache.
+
+        session.evict(produto);                                 // Desaloja = remove do armazenamento. O objeto "produto" é passado como parâmetro e removerá o produto que está no Nível 1 do Cache.
+                                                                // Se o método evict for comentado, o cache volta a funcionar.
+        repository.findById(1).get();                           // roda a segunda query ( consulta ) mais uma vez. No console aparecerá as duas "Select" "queries", ou seja, buscou diretamente do database.
+
     }
-
-/*    @Test           // Teste nível 1 - session é public por default
-    @Transactional //@Transactional = Porque o Spring trata o nível de Caching - Session ou o Spring Session está associado com transaction e para funcionar, é necessário anotar. É obrigatório para funcionar o Nível 1 - Session.
-    public void testCaching() {
-        repository.findOne(1);
-        repository.findOne(1);
-
-    }*/
-
-    /*@Test
-    @Transactional //@Transactional = Porque o Spring trata o nível de Caching - Session ou o Spring Session está associado com transaction e para funcionar, é necessário anotar. É obrigatório para funcionar o Nível 1 - Session.
-    public void testCaching() {  // Teste nível 1 - session é public por default
-        Session session = entityManager.unwrap(Session.class);
-        Produto produto = repository.findById(1).get();
-
-        repository.findById(1).get();
-
-        session.evict(produto);
-
-        repository.findById(1).get();
-
-    }*/
 }
