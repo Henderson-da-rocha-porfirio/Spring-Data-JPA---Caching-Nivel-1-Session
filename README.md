@@ -42,5 +42,3 @@
 ##### iii. Jboss Tree cache
 ##### iv. OS cache
 ##### v. Tangosol Cache
-## N1 Caching
-### 1
