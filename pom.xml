@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.tuyo.produtodata</groupId>
-	<artifactId>produtosdata</artifactId>
+	<artifactId>produtosdata-cache-um</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>produtosdata</name>
+	<name>produtosdata-cache-um</name>
 	<description>Project for Spring Boot - JPA BOOTCAMP TUYO</description>
 	<properties>
 		<java.version>1.8</java.version>

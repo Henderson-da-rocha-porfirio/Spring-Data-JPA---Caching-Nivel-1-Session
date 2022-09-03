@@ -1,25 +1,27 @@
 package com.tuyo.produtodata.produtosdata;
 
-import com.tuyo.produtodata.produtosdata.entities.*;
-import com.tuyo.produtodata.produtosdata.repository.*;
-import org.hibernate.Hibernate;
+import com.tuyo.produtodata.produtosdata.entities.Produto;
+import com.tuyo.produtodata.produtosdata.repository.ProdutoRepository;
 import org.hibernate.Session;
-import org.junit.jupiter.api.*;
-import org.junit.runner.*;
-import org.springframework.beans.factory.annotation.*;
-import org.springframework.boot.test.context.*;
-import org.springframework.data.domain.*;
-import org.springframework.test.context.junit4.*;
+import org.junit.jupiter.api.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @RunWith(SpringRunner.class)            //Usando SpringRunner em vez de JUnit default.
 @SpringBootTest
-class ProdutosdataApplicationTests {    // Junit testes
+class ProdutosdataCacheUmApplicationTests {    // Junit testes
 
     @Autowired
     ProdutoRepository repository;
