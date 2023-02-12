@@ -1,9 +1,6 @@
 package com.tuyo.produtodata.produtosdata.entities;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity // this is mandatory annotation the next one at table:
 @Table // Optional - só é necessária apenas se o nome da tabela no database for diferente do da classe.

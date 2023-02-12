@@ -1,11 +1,9 @@
 package com.tuyo.produtodata.produtosdata.repository;
 
-import com.tuyo.produtodata.produtosdata.entities.Produto;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.repository.*;
+import com.tuyo.produtodata.produtosdata.entities.*;
+import org.springframework.data.domain.*;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 public interface ProdutoRepository extends CrudRepository<Produto, Integer> {           // É preciso prover genérica informação que este repositório CRUD espera.
                                                                                          // <T, Id> = Tipo: Entidade Produto. E Id: Integer. Lá está como tipo primitivo "int", colocamos aqui com a classe " Integer ".
